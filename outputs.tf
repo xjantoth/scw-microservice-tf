@@ -1,6 +1,5 @@
 output "os_image_id" {
   value = data.scaleway_image.centos.id
-
 }
 
 output "k8s-master-private-ip" {
