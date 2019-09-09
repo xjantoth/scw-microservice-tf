@@ -31,3 +31,16 @@ Outputs:
 
 id = 9a53e825-19f9-4e1f-b841-dd921e4e1b39
 ```
+
+## Create terraform.scw.tfvars
+
+```
+# General
+
+scw_region            = "par1"
+scw_token             = "..."
+scw_organization      = "..."
+operating_system      = "CentOS 7.6"
+instance_type         = "DEV1-S"
+cloudinit_script_name = "modules/k8s_master/conf/cloudinit.sh"
+```

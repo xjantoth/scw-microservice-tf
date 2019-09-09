@@ -1,9 +1,9 @@
 resource "scaleway_security_group" "this" {
-  name        = var.security_group
-  description = "Allow HTTP/S and SSH traffic"
+  name        = "kubernetes_security_group"
+  description = "Security group for Kubernetes nodes."
 }
 
-resource "scaleway_security_group_rule" "drop-external" {
+resource "scaleway_security_group_rule" "this" {
   security_group = "${scaleway_security_group.this.id}"
 
   action    = "drop"
