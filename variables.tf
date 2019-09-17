@@ -43,3 +43,13 @@ variable "master_script_initial" {
   type        = "string"
   description = "Shell script to initiate Kubernetes master"
 }
+
+variable "worker_script_initial" {
+  type        = "string"
+  description = "Shell script to initiate Kubernetes worker"
+}
+
+variable "worker" {
+  type        = "string"
+  description = "Identifies Kubernetes role: master|worker"
+}

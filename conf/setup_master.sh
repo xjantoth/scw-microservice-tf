@@ -201,7 +201,8 @@ IPETH0=$(ip a | grep eth0 | grep inet | awk -F" " '{print $2}' | awk -F"/" '{pri
 TOKEN=$(kubeadm token create)
 
 # Copy and paste this string to Worker machine and execute it!
-echo -e "kubeadm join ${IPETH0}:6443 --token ${TOKEN} --discovery-token-ca-cert-hash sha256:${CACERT}"
+echo -e "kubeadm join \${IPETH0}:6443 --token \${TOKEN} --discovery-token-ca-cert-hash sha256:\${CACERT}"
+kubeadm token create --print-join-command
 EOF
 
 # Grant executable permissions 

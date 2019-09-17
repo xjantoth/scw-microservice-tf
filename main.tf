@@ -21,3 +21,13 @@ module "k8s_master" {
   cloudinit_script_name    = var.cloudinit_script_name
   master_script_initial    = var.master_script_initial
 }
+
+module "k8s_worker" {
+  source                   = "./modules/k8s_worker"
+  sg_id                    = module.security_group.this_security_group_id
+  instance_type            = var.instance_type
+  available_instance_types = var.available_instance_types
+  operating_system         = var.operating_system
+  worker_script_initial    = var.worker_script_initial
+  worker                   = var.worker
+}

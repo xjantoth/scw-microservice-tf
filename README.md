@@ -3,9 +3,14 @@
 ```bash
 tree -L 2
 .
+├── conf
+│   ├── cloudinit.sh
+│   ├── setup_master.sh
+│   └── setup_worker.sh
 ├── main.tf
 ├── modules
 │   ├── k8s_master
+│   ├── k8s_worker
 │   └── security_group
 ├── outputs.tf
 ├── README.md
@@ -13,8 +18,6 @@ tree -L 2
 ├── terraform.tfstate
 ├── terraform.tfstate.backup
 └── variables.tf
-
-3 directories, 7 files
 ```
 
 ## How to run terraform code with -var-file option
@@ -40,7 +43,8 @@ operating_system      = "CentOS 7.6"
 instance_type         = "DEV1-S"
 cloudinit_script_name = "cloudinit.sh"
 master_script_initial = "setup_master.sh"
-
+worker_script_initial = "setup_worker.sh"
+worker                = "worker-1"
 ```
 
 ## Install scaleway-cli

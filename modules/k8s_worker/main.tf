@@ -6,27 +6,20 @@ data "scaleway_image" "centos" {
 resource "scaleway_ip" "this" {
   # Line below is commented because "scalweay_ip resource" will
   # be used as the input parameter for "scaleway_server resource"  
-  # server = "${scaleway_server.k8s-master.id}"
+  # server = "${scaleway_server.this.id}"
 }
-
-# I do not know how to take advantage out of this section yet (cloudinit)
-data "local_file" "cloudinit_file" {
-  filename = "${path.module}/../../conf/${var.cloudinit_script_name}"
-}
-
 
 resource "scaleway_server" "this" {
-  name           = "k8s-master-tf"
+  name           = "k8s-${var.worker}-tf"
   image          = data.scaleway_image.centos.id
   type           = var.instance_type
-  tags           = ["k8s-master-tf"]
-  cloudinit      = data.local_file.cloudinit_file.content
+  tags           = ["k8s-${var.worker}-tf", "${var.worker}"]
   public_ip      = scaleway_ip.this.ip
   security_group = var.sg_id
 
   provisioner "file" {
-    source      = "${path.module}/../../conf/${var.master_script_initial}"
-    destination = "/opt/${var.master_script_initial}"
+    source      = "${path.module}/../../conf/${var.worker_script_initial}"
+    destination = "/opt/${var.worker_script_initial}"
 
     connection {
       type = "ssh"
@@ -47,12 +40,12 @@ resource "scaleway_server" "this" {
       # This is an examle of using templatefile (useful if there is a need
       # to use soem variables in Bash, Python, etc. scripts from variables.tf)
       #
-      # templatefile("${path.module}/conf/${var.master_script_initial}", {
+      # templatefile("${path.module}/conf/${var.worker_script_initial}", {
       #   PUBLIC_IP = scaleway_server.this.public_ip
       # })
 
-      "chmod +x /opt/${var.master_script_initial}",
-      "/opt/${var.master_script_initial} &> /opt/${var.master_script_initial}.log",
+      "chmod +x /opt/${var.worker_script_initial}",
+      "/opt/${var.worker_script_initial} &> /opt/${var.worker_script_initial}.log",
 
 
     ]
