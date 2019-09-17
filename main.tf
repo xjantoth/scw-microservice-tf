@@ -19,4 +19,5 @@ module "k8s_master" {
   available_instance_types = var.available_instance_types
   operating_system         = var.operating_system
   cloudinit_script_name    = var.cloudinit_script_name
+  master_script_initial    = var.master_script_initial
 }

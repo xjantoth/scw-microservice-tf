@@ -38,3 +38,8 @@ variable "cloudinit_script_name" {
   type        = string
   description = "Cloudinit script name"
 }
+
+variable "master_script_initial" {
+  type        = "string"
+  description = "Shell script to initiate Kubernetes master"
+}

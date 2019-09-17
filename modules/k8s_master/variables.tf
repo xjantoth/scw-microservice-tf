@@ -22,3 +22,8 @@ variable "sg_id" {
   type        = string
   description = "Security group id"
 }
+
+variable "master_script_initial" {
+  type        = "string"
+  description = "Shell script to initiate Kubernetes master"
+}
