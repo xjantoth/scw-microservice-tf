@@ -53,3 +53,4 @@ variable "worker" {
   type        = "string"
   description = "Identifies Kubernetes role: master|worker"
 }
+

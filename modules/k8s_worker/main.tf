@@ -18,8 +18,8 @@ resource "scaleway_server" "this" {
   security_group = var.sg_id
 
   provisioner "file" {
-    source      = "${path.module}/../../conf/${var.worker_script_initial}"
-    destination = "/opt/${var.worker_script_initial}"
+    source      = "${path.module}/../../conf/"
+    destination = "/opt/"
 
     connection {
       type = "ssh"
@@ -44,8 +44,10 @@ resource "scaleway_server" "this" {
       #   PUBLIC_IP = scaleway_server.this.public_ip
       # })
 
-      "chmod +x /opt/${var.worker_script_initial}",
+      "chmod +x /opt/*.sh",
+      "sleep 7",
       "/opt/${var.worker_script_initial} &> /opt/${var.worker_script_initial}.log",
+      "${var.expected_join_cmd}",
 
 
     ]

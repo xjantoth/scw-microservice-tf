@@ -25,8 +25,9 @@ resource "scaleway_server" "this" {
   security_group = var.sg_id
 
   provisioner "file" {
-    source      = "${path.module}/../../conf/${var.master_script_initial}"
-    destination = "/opt/${var.master_script_initial}"
+    # copying all files from conf/ folder
+    source      = "${path.module}/../../conf/"
+    destination = "/opt/"
 
     connection {
       type = "ssh"
@@ -51,12 +52,15 @@ resource "scaleway_server" "this" {
       #   PUBLIC_IP = scaleway_server.this.public_ip
       # })
 
-      "chmod +x /opt/${var.master_script_initial}",
+      "chmod +x /opt/*.sh",
+      "sleep 7",
       "/opt/${var.master_script_initial} &> /opt/${var.master_script_initial}.log",
 
 
     ]
   }
 }
+
+
 
 

@@ -1,57 +1,51 @@
 #!/bin/bash
 
+COMMON=/opt/common.sh
+
+# Exporting all the functions from common.sh file
+while [ ! -f ${COMMON} ]
+do
+  echo -e "File ${COMMON} not present 
+  at machine yet ...\nGoing to sleep for 2[s]"
+  sleep 2
+done
+
+echo -e "File ${COMMON} present!"
+source ${COMMON}
+
+yum update -y
+
 # Disable Selinux
-getenforce
-setenforce 0
-sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+disable_selinux
 
 # Disable SWAP
-swapoff -a
-sed -i '/[^#]/ s/\(^.*swap.*$\)/#\ \1/' /etc/fstab
+swapp_off
 
-# Setup bridge interface
-cat <<EOF >  /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv4.ip_forward = 1
-EOF
-sysctl --system
+# Setup firewall rules to allow: Master/Worker communication within cluster
+setup_pkg firewalld 
 
+for couple in 30000-32767:tcp 10250:tcp 6783:tcp 6783:udp 6784:udp; do
+  PORT=$(echo ${couple} | awk -F":" '{print $1}')
+  PROTOCOL=$(echo ${couple} | awk -F":" '{print $2}')
+  allow_fw_port ${PORT} ${PROTOCOL}
+done
 
-# Install docker
-yum update -y && yum install docker -y
-systemctl enable docker && systemctl start docker
-
-# Create kubernetes yum repository
-cat <<EOF > /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-exclude=kube*
-EOF
-
-# Install important packages
-yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
-systemctl enable kubelet && systemctl start kubelet
-
-
-# setup particular firewall rules to allow master/worker comunication
-yum install firewalld -y
-systemctl enable firewalld && systemctl start firewalld
-
-firewall-cmd --permanent --add-port=30000-32767/tcp
-firewall-cmd --permanent --add-port=10250/tcp
-firewall-cmd --permanent --add-port=6783/tcp
-firewall-cmd --permanent --add-port=6783/udp
-firewall-cmd --permanent --add-port=6784/udp
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -j ACCEPT
+# firewall-cmd --permanent --add-port=10255/tcp
 # firewall-cmd --add-masquerade --permanent
 firewall-cmd --reload
-
 firewall-cmd --zone=public --list-all
 
+# Setup bridge interface
+setup_bridge
+
+# Install docker
+setup_pkg docker
+
+# Install kubelet kubeadm kubectl packages create kubernetes yum repository
+add_yum_repo 
+yum install -y kubeadm kubectl --disableexcludes=kubernetes
+setup_pkg kubelet
+
 # Run join command generated at Kubernetes Master
+

@@ -9,3 +9,4 @@ output "this_scaleway_server_private_ip" {
 output "this_scaleway_server_public_ip" {
   value = scaleway_server.this.public_ip
 }
+
