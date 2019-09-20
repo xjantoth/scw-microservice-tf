@@ -61,6 +61,8 @@ curl \
 -o weave_custom.yaml \
 "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=192.168.0.0/24"
 # Execute previously downloaded file: file
+sed -i.bak 's/apiVersion: extensions\/v1beta1/apiVersion: apps\/v1/g' /root/weave_custom.yaml
+sed -i.bak '/^\s*kind:\s*DaemonSet/,/^\s*template/s/^\(\s*spec:\s*\)/\1 \n      selector:\n        matchLabels:\n          name: weave-net/'  /root/weave_custom.yaml
 kubectl create -f weave_custom.yaml
 
 # Install helm binary

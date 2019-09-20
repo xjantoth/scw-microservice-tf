@@ -4,7 +4,7 @@ function create_dir () {
   local dirName="$1"  
   if [ ! -d ${dirName} ]
   then
-      mkdir ${dirName}
+      mkdir -p ${dirName}
   else
     echo "Directory: ${dirName} exists!"  
   fi
@@ -66,7 +66,7 @@ function install_helm {
 }
 
 function generate_certs {
-  CERTS_DIR="certs"
+  CERTS_DIR="/opt/certs"
   create_dir ${CERTS_DIR}
   
   cd ${CERTS_DIR}
@@ -115,23 +115,38 @@ EOF
 }
 
 function secure_helm_tiller {
-  echo  -e "\nGenerating certificates"
-  generate_certs
-  echo -e "\nCreating ServiceAccount and CRB"
-  create_sa_crb
-  kubectl create -f rbac-tiller-config.yaml
-  
-  # Allow application scheduling on Kubernetes master
-  kubectl taint nodes --all node-role.kubernetes.io/master-
-  
-  # Deploy tiller pod with SSL
-  helm init --service-account=tiller --tiller-tls --tiller-tls-cert ./tiller.cert.pem --tiller-tls-key ./tiller.key.pem --tiller-tls-verify --tls-ca-cert ca.cert.pem
-  
-  echo -e "helm ls --tls --tls-ca-cert ca.cert.pem --tls-cert helm.cert.pem --tls-key helm.key.pem"
-  echo -e "executing: cp helm.cert.pem ~/.helm/cert.pem"
-  yes | cp -rf helm.cert.pem ~/.helm/cert.pem
-  echo -e "executing: cp helm.key.pem ~/.helm/key.pem"
-  yes | cp -rf helm.key.pem ~/.helm/key.pem
-  cd ..
+echo  -e "\nGenerating certificates"
+generate_certs
+echo -e "\nCreating ServiceAccount and CRB"
+create_sa_crb
+kubectl create -f rbac-tiller-config.yaml
+
+# Allow application scheduling on Kubernetes master
+kubectl taint nodes --all node-role.kubernetes.io/master-
+
+HELMINIT="/opt/helm-init.yaml"
+
+# Deploy tiller pod with SSL
+helm init \
+--service-account=tiller \
+--tiller-tls \
+--tiller-tls-cert ./tiller.cert.pem \
+--tiller-tls-key ./tiller.key.pem \
+--tiller-tls-verify \
+--tls-ca-cert \
+ca.cert.pem \
+-o yaml > ${HELMINIT}
+
+sed -i 's@apiVersion: extensions/v1beta1@apiVersion: apps/v1@' ${HELMINIT}
+sed -i '/^\s*kind:\s*Deployment/,/^\s*template/s/^\(\s*spec:\s*\)/\1 \n  selector:\n    matchLabels:\n      name: tiller/'  ${HELMINIT}
+kubectl apply -f ${HELMINIT}
+
+echo -e "helm ls --tls --tls-ca-cert ca.cert.pem --tls-cert helm.cert.pem --tls-key helm.key.pem"
+echo -e "executing: cp helm.cert.pem ~/.helm/cert.pem"
+create_dir ~/.helm
+yes | cp -rf ${CERTS_DIR}/helm.cert.pem ~/.helm/cert.pem
+echo -e "executing: cp helm.key.pem ~/.helm/key.pem"
+yes | cp -rf ${CERTS_DIR}/helm.key.pem ~/.helm/key.pem
+cd ..
 }
 
