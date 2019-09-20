@@ -30,5 +30,5 @@ module "k8s_worker" {
   operating_system         = var.operating_system
   worker_script_initial    = var.worker_script_initial
   worker                   = var.worker
-  expected_join_cmd        = "..."
+  expected_join_cmd        = "uname -n"
 }
