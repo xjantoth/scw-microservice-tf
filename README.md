@@ -5,8 +5,10 @@ tree -L 2
 .
 ├── conf
 │   ├── cloudinit.sh
+│   ├── common.sh
 │   ├── setup_master.sh
 │   └── setup_worker.sh
+├── graph.svg
 ├── main.tf
 ├── modules
 │   ├── k8s_master
@@ -18,6 +20,8 @@ tree -L 2
 ├── terraform.tfstate
 ├── terraform.tfstate.backup
 └── variables.tf
+
+5 directories, 12 files
 ```
 
 ## How to run terraform code with -var-file option
