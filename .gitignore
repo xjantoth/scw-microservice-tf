@@ -5,3 +5,4 @@
 *.tfstate.*
 *.tfvars
 *.log
+conf/__pycache__/

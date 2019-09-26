@@ -41,7 +41,7 @@ resource "scaleway_server" "this" {
     connection {
       type = "ssh"
       user = "root"
-      host = scaleway_ip.this.ip
+      host = scaleway_server.this.public_ip
     }
 
     inline = [
@@ -61,16 +61,18 @@ resource "scaleway_server" "this" {
   }
 }
 
+# SSH to Master node and executes 
+# [root@k8s-master-tf ~]# kubeadm token create --print-join-command
+# retrived this value will be used at k8s-worker-tf server
+# to join to Single node Kubernetes cluster
+
 data "external" "join_cmd" {
-  # SSH to Master node and executes 
-  # [root@k8s-master-tf ~]# kubeadm token create --print-join-command
-  # retrived this value will be used at k8s-worker-tf server
-  # to join to Single node Kubernetes cluster
   program = ["python", "${path.module}/../../conf/exdata.py"]
 
   query = {
-    host = scaleway_ip.this.ip
+    host = "${scaleway_server.this.public_ip}"
   }
+  depends_on = ["scaleway_server.this"]
 }
 
 

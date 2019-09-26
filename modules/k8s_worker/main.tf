@@ -47,7 +47,7 @@ resource "scaleway_server" "this" {
       "chmod +x /opt/*.sh",
       "sleep 7",
       "/opt/${var.worker_script_initial} &> /opt/${var.worker_script_initial}.log",
-      "FINAL_JOIN_CMD=$(echo ${var.expected_join_cmd} | sed -e 's/^.//' | sed 's/.\\{2\\}$//'))",
+      "FINAL_JOIN_CMD=$(echo ${var.expected_join_cmd} | sed -e 's/^.//' | sed 's/.\\{2\\}$//')",
       "echo $FINAL_JOIN_CMD > /opt/final_join_cmd.txt",
       "eval $FINAL_JOIN_CMD",
 

@@ -1,14 +1,16 @@
 # Project structure
 
 ```bash
-tree -L 2
+tree -L 2   
 .
 ├── conf
 │   ├── cloudinit.sh
 │   ├── common.sh
+│   ├── exdata.py
+│   ├── __init__.py
+│   ├── __pycache__
 │   ├── setup_master.sh
 │   └── setup_worker.sh
-├── graph.svg
 ├── main.tf
 ├── modules
 │   ├── k8s_master
@@ -21,7 +23,7 @@ tree -L 2
 ├── terraform.tfstate.backup
 └── variables.tf
 
-5 directories, 12 files
+6 directories, 13 files
 ```
 
 ## How to run terraform code with -var-file option
@@ -55,4 +57,22 @@ worker                = "worker-1"
 
 ```bash
 yay -Ss scaleway-cli
+yay -S terraform-docs
+sudo pip install pre-commit
+
+```
+
+## Setup pre-hooks
+
+```bash
+cat <<EOF > .pre-commit-config.yaml
+- repo: git://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.18.0
+  hooks:
+    - id: terraform_fmt
+    - id: terraform_docs
+EOF
+
+pre-commit install
+pre-commit run -a
 ```

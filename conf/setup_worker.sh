@@ -13,7 +13,7 @@ done
 echo -e "File ${COMMON} present!"
 source ${COMMON}
 
-yum update -y
+#yum update -y
 
 # Disable Selinux
 disable_selinux

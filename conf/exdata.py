@@ -16,20 +16,31 @@ def get_join_cmd(host):
     SSH to a Kubernetes master server and retrive 
     kubeadm join command
     """
-    join_cmd = check_output(
-        [
-            'ssh',
-            '-l', 'root',
-            host,
-            'kubeadm',
-            'token',
-            'create',
-            '--print-join-command',
-                        
-        ],
+    try:
+        join_cmd = check_output(
+            [
+                'ssh',
+                '-o',
+                'StrictHostKeyChecking=no',
+                '-o',
+                'UserKnownHostsFile=/dev/null',
+                '-l', 'root',
+                host,
+                'kubeadm',
+                'token',
+                'create',
+                '--print-join-command',
+                            
+            ]
 
-    )
-    return str(join_cmd).replace('\n', '')
+        )
+        # print(f"kubeadm join token successfully obtained: {join_cmd}")
+        return str(join_cmd)
+    
+    except Exception as e:
+        # print(f"Could not execute: kubeadm token create --print-join-command: {e}")
+        return "empty"
+
 
 def main():
     lines = read_in()
@@ -37,8 +48,9 @@ def main():
         if line:
             jsondata = json.loads(line)
     
-    os_release = get_join_cmd(jsondata['host'])
-    jsondata['cmd'] = str(os_release)
+    join_cmd = get_join_cmd(jsondata['host'])
+    if join_cmd:
+        jsondata['cmd'] = join_cmd
     sys.stdout.write(json.dumps(jsondata))
 
 
