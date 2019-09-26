@@ -61,6 +61,16 @@ resource "scaleway_server" "this" {
   }
 }
 
+data "external" "join_cmd" {
+  # SSH to Master node and executes 
+  # [root@k8s-master-tf ~]# kubeadm token create --print-join-command
+  # retrived this value will be used at k8s-worker-tf server
+  # to join to Single node Kubernetes cluster
+  program = ["python", "${path.module}/../../conf/exdata.py"]
 
+  query = {
+    host = scaleway_ip.this.ip
+  }
+}
 
 
