@@ -33,3 +33,7 @@ variable "expected_join_cmd" {
   type        = "string"
   description = "Command executed at worker to join worker to Kubernetes master"
 }
+
+variable "enabled" {
+  description = "Flag to enable or disable this resource"
+}

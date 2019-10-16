@@ -3,10 +3,10 @@ data "scaleway_image" "centos" {
   name         = var.operating_system
 }
 
-resource "scaleway_ip" "this" {
+resource "scaleway_instance_ip" "this" {
   # Line below is commented because "scalweay_ip resource" will
   # be used as the input parameter for "scaleway_server resource"  
-  # server = "${scaleway_server.k8s-master.id}"
+  server_id = "${scaleway_instance_server.this[0].id}"
 }
 
 # I do not know how to take advantage out of this section yet (cloudinit)
@@ -15,14 +15,15 @@ data "local_file" "cloudinit_file" {
 }
 
 
-resource "scaleway_server" "this" {
-  name           = "k8s-master-tf"
-  image          = data.scaleway_image.centos.id
-  type           = var.instance_type
-  tags           = ["k8s-master-tf"]
-  cloudinit      = data.local_file.cloudinit_file.content
-  public_ip      = scaleway_ip.this.ip
-  security_group = var.sg_id
+resource "scaleway_instance_server" "this" {
+  count = "${var.enabled == "true" ? 1 : 0}"
+
+  name              = "k8s-${var.master}-tf"
+  image             = data.scaleway_image.centos.id
+  type              = var.instance_type
+  tags              = ["k8s-${var.master}-tf", "${var.master}"]
+  cloud_init        = data.local_file.cloudinit_file.content
+  security_group_id = var.sg_id
 
   provisioner "file" {
     # copying all files from conf/ folder
@@ -32,7 +33,7 @@ resource "scaleway_server" "this" {
     connection {
       type = "ssh"
       user = "root"
-      host = scaleway_ip.this.ip
+      host = scaleway_instance_server.this[0].public_ip
     }
   }
 
@@ -41,7 +42,7 @@ resource "scaleway_server" "this" {
     connection {
       type = "ssh"
       user = "root"
-      host = scaleway_server.this.public_ip
+      host = scaleway_instance_server.this[0].public_ip
     }
 
     inline = [
@@ -67,12 +68,13 @@ resource "scaleway_server" "this" {
 # to join to Single node Kubernetes cluster
 
 data "external" "join_cmd" {
+  # count   = "${var.enabled == "true" ? 1 : 0}"
   program = ["python", "${path.module}/../../conf/exdata.py"]
 
   query = {
-    host = "${scaleway_server.this.public_ip}"
+    host = "${scaleway_instance_server.this[0].public_ip}"
   }
-  depends_on = ["scaleway_server.this"]
+  depends_on = ["scaleway_instance_server.this"]
 }
 
 

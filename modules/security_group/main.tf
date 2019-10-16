@@ -1,17 +1,19 @@
-resource "scaleway_security_group" "this" {
-  name        = "kubernetes_security_group"
-  description = "Security group for Kubernetes nodes."
-}
+resource "scaleway_instance_security_group" "this" {
+  inbound_default_policy = "accept" 
+  # By default we drop incomming trafic 
+  # that do not match any inbound_rule.
 
-resource "scaleway_security_group_rule" "this" {
-  security_group = "${scaleway_security_group.this.id}"
+  name        = "k8s_security_group"
+  description = "Allowing port used K8s servers"
 
-  action    = "drop"
-  direction = "inbound"
-  ip_range  = "0.0.0.0/0"
-  protocol  = "TCP"
+  # count = "${length(var.node_ports)}"
 
-  port  = "${element(var.node_ports, count.index)}"
-  count = "${length(var.node_ports)}"
+  inbound_rule {
+    action   = "accept"
+    ip_range = "0.0.0.0/0"
+    protocol = "TCP"
+    port     = 22
+  }
+
 
 }
