@@ -3,16 +3,21 @@ terraform {
 }
 
 provider "scaleway" {
-  organization = var.scw_organization
-  token        = var.scw_token
-  region       = var.scw_region
+  # version         = "~> 2.0"
+  access_key      = var.scw_access_key
+  secret_key      = var.scw_token
+  organization_id = var.scw_organization
+  zone            = var.scw_zone
+  region          = var.scw_region
 }
+
 
 module "security_group" {
   source = "./modules/security_group"
 }
 
 module "k8s_master" {
+  enabled                  = var.master_enabled
   source                   = "./modules/k8s_master"
   sg_id                    = module.security_group.this_security_group_id
   instance_type            = var.instance_type
@@ -20,9 +25,11 @@ module "k8s_master" {
   operating_system         = var.operating_system
   cloudinit_script_name    = var.cloudinit_script_name
   master_script_initial    = var.master_script_initial
+  master                   = var.master
 }
 
 module "k8s_worker" {
+  enabled                  = var.worker_enabled
   source                   = "./modules/k8s_worker"
   sg_id                    = module.security_group.this_security_group_id
   instance_type            = var.instance_type
@@ -31,4 +38,5 @@ module "k8s_worker" {
   worker_script_initial    = var.worker_script_initial
   worker                   = var.worker
   expected_join_cmd        = module.k8s_master.join_command
+  # expected_join_cmd = "ls -al"
 }

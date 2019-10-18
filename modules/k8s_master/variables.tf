@@ -27,3 +27,12 @@ variable "master_script_initial" {
   type        = "string"
   description = "Shell script to initiate Kubernetes master"
 }
+
+variable "master" {
+  type        = "string"
+  description = "Identifies Kubernetes role: master"
+}
+
+variable "enabled" {
+  description = "Flag to enable or disable this resource"
+}

@@ -3,19 +3,20 @@ data "scaleway_image" "centos" {
   name         = var.operating_system
 }
 
-resource "scaleway_ip" "this" {
+resource "scaleway_instance_ip" "this" {
   # Line below is commented because "scalweay_ip resource" will
   # be used as the input parameter for "scaleway_server resource"  
-  # server = "${scaleway_server.this.id}"
+  server_id = "${scaleway_instance_server.this[0].id}"
 }
 
-resource "scaleway_server" "this" {
-  name           = "k8s-${var.worker}-tf"
-  image          = data.scaleway_image.centos.id
-  type           = var.instance_type
-  tags           = ["k8s-${var.worker}-tf", "${var.worker}"]
-  public_ip      = scaleway_ip.this.ip
-  security_group = var.sg_id
+resource "scaleway_instance_server" "this" {
+  count = "${var.enabled == "true" ? 1 : 0}"
+
+  name              = "k8s-${var.worker}-tf"
+  image             = data.scaleway_image.centos.id
+  type              = var.instance_type
+  tags              = ["k8s-${var.worker}-tf", "${var.worker}"]
+  security_group_id = var.sg_id
 
   provisioner "file" {
     source      = "${path.module}/../../conf/"
@@ -24,7 +25,7 @@ resource "scaleway_server" "this" {
     connection {
       type = "ssh"
       user = "root"
-      host = scaleway_ip.this.ip
+      host = scaleway_instance_server.this[0].public_ip
     }
   }
 
@@ -33,7 +34,7 @@ resource "scaleway_server" "this" {
     connection {
       type = "ssh"
       user = "root"
-      host = scaleway_ip.this.ip
+      host = scaleway_instance_server.this[0].public_ip
     }
 
     inline = [
@@ -41,7 +42,7 @@ resource "scaleway_server" "this" {
       # to use soem variables in Bash, Python, etc. scripts from variables.tf)
       #
       # templatefile("${path.module}/conf/${var.worker_script_initial}", {
-      #   PUBLIC_IP = scaleway_server.this.public_ip
+      #   PUBLIC_IP = scaleway_instance_server.this.public_ip
       # })
 
       "chmod +x /opt/*.sh",

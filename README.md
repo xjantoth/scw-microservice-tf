@@ -1,5 +1,10 @@
 # Project structure
 
+
+```bash
+curl 'https://api-marketplace.scaleway.com/images?arch=x86_64'  | jq -r '.images[].name'
+```
+
 ```bash
 tree -L 2   
 .
@@ -34,7 +39,7 @@ terraform validate
 terraform plan  -var-file=terraform.scw.tfvars 
 terraform apply  -var-file=terraform.scw.tfvars 
 terraform destroy  -var-file=terraform.scw.tfvars 
-
+TF_LOG=debug terraform plan  -var-file=terraform.scw.tfvars
 ```
 
 ## Create terraform.scw.tfvars
@@ -42,15 +47,21 @@ terraform destroy  -var-file=terraform.scw.tfvars
 ```bash
 # General
 
-scw_region            = "par1"
+scw_access_key        = "..."
 scw_token             = "..."
 scw_organization      = "..."
+scw_zone              = "fr-par-1"
+scw_region            = "fr-par"
 operating_system      = "CentOS 7.6"
 instance_type         = "DEV1-S"
 cloudinit_script_name = "cloudinit.sh"
 master_script_initial = "setup_master.sh"
 worker_script_initial = "setup_worker.sh"
 worker                = "worker-1"
+master                = "master-1"
+worker_enabled        = "true"
+master_enabled        = "true"
+
 ```
 
 ## Install scaleway-cli
