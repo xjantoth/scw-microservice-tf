@@ -6,7 +6,7 @@ curl 'https://api-marketplace.scaleway.com/images?arch=x86_64'  | jq -r '.images
 ```
 
 ```bash
-tree -L 2   
+ tree -L 2
 .
 ├── conf
 │   ├── cloudinit.sh
@@ -24,11 +24,12 @@ tree -L 2
 ├── outputs.tf
 ├── README.md
 ├── terraform.scw.tfvars
+├── terraform.scw.tfvars.sample
 ├── terraform.tfstate
 ├── terraform.tfstate.backup
 └── variables.tf
 
-6 directories, 13 files
+6 directories, 14 files
 ```
 
 ## How to run terraform code with -var-file option
@@ -45,10 +46,8 @@ TF_LOG=debug terraform plan  -var-file=terraform.scw.tfvars
 ## Create terraform.scw.tfvars
 
 ```bash
-# General
-
-scw_access_key        = "..."
 scw_token             = "..."
+scw_access_key        = "..."
 scw_organization      = "..."
 scw_zone              = "fr-par-1"
 scw_region            = "fr-par"
@@ -61,7 +60,8 @@ worker                = "worker-1"
 master                = "master-1"
 worker_enabled        = "true"
 master_enabled        = "true"
-
+allowed_tcp_ports     = ["30111", "30222", "30333", "30444", "22", "6443", "10250", "10251", "10252", "6783", "6784", "2379", "2380"]
+allowed_udp_ports     = ["6783"]
 ```
 
 ## Install scaleway-cli

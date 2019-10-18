@@ -13,7 +13,10 @@ provider "scaleway" {
 
 
 module "security_group" {
-  source = "./modules/security_group"
+  source            = "./modules/security_group"
+  sg_name           = "k8s-microservice"
+  allowed_tcp_ports = var.allowed_tcp_ports
+  allowed_udp_ports = var.allowed_udp_ports
 }
 
 module "k8s_master" {
@@ -38,5 +41,5 @@ module "k8s_worker" {
   worker_script_initial    = var.worker_script_initial
   worker                   = var.worker
   expected_join_cmd        = module.k8s_master.join_command
-  # expected_join_cmd = "ls -al"
 }
+

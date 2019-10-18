@@ -1,0 +1,19 @@
+scw_token             = "..."
+scw_access_key        = "..."
+scw_organization      = "..."
+scw_zone              = "fr-par-1"
+scw_region            = "fr-par"
+operating_system      = "CentOS 7.6"
+instance_type         = "DEV1-S"
+cloudinit_script_name = "cloudinit.sh"
+master_script_initial = "setup_master.sh"
+worker_script_initial = "setup_worker.sh"
+worker                = "worker-1"
+master                = "master-1"
+worker_enabled        = "true"
+master_enabled        = "true"
+allowed_tcp_ports     = ["30111", "30222", "30333", "30444", "22", "6443", "10250", "10251", "10252", "6783", "6784", "2379", "2380"]
+allowed_udp_ports     = ["6783"]
+
+
+
