@@ -3,6 +3,15 @@
 
 ```bash
 curl 'https://api-marketplace.scaleway.com/images?arch=x86_64'  | jq -r '.images[].name'
+
+git clone https://github.com/xjantoth/scw-microservice-tf
+
+main.tf
+variables.tf
+outputs.tf
+terraform.scw.tfvars (optional - personal preference)
+modules/
+conf/
 ```
 
 ```bash
