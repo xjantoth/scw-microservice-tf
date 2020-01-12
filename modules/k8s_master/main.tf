@@ -1,4 +1,4 @@
-data "scaleway_image" "centos" {
+data "scaleway_instance_image" "centos" {
   architecture = lookup(var.available_instance_types, var.instance_type)
   name         = var.operating_system
 }
@@ -6,7 +6,7 @@ data "scaleway_image" "centos" {
 resource "scaleway_instance_ip" "this" {
   # Line below is commented because "scalweay_ip resource" will
   # be used as the input parameter for "scaleway_server resource"  
-  server_id = "${scaleway_instance_server.this[0].id}"
+  # server_id = scaleway_instance_server.this[0].id
 }
 
 # I do not know how to take advantage out of this section yet (cloudinit)
@@ -16,23 +16,27 @@ data "local_file" "cloudinit_file" {
 
 
 resource "scaleway_instance_server" "this" {
-  count = "${var.enabled == "true" ? 1 : 0}"
+  count = var.enabled == "true" ? 1 : 0
 
   name              = "k8s-${var.master}-tf"
-  image             = data.scaleway_image.centos.id
+  image             = data.scaleway_instance_image.centos.id
   type              = var.instance_type
   tags              = ["k8s-${var.master}-tf", "${var.master}"]
   cloud_init        = data.local_file.cloudinit_file.content
   security_group_id = var.sg_id
+  ip_id             = scaleway_instance_ip.this.id
 
   provisioner "file" {
     # copying all files from conf/ folder
-    source      = "${path.module}/../../conf/"
-    destination = "/opt/"
+    source      = "${path.module}/../../conf/" # my local code
+    destination = "/opt/"                      # remote server
 
     connection {
       type = "ssh"
       user = "root"
+      private_key = file("~/.ssh/k8s-scw")
+      agent = false
+      timeout     = "5m"
       host = scaleway_instance_server.this[0].public_ip
     }
   }
@@ -42,6 +46,9 @@ resource "scaleway_instance_server" "this" {
     connection {
       type = "ssh"
       user = "root"
+      private_key = file("~/.ssh/k8s-scw")
+      agent = false
+      timeout     = "5m"
       host = scaleway_instance_server.this[0].public_ip
     }
 
@@ -67,14 +74,14 @@ resource "scaleway_instance_server" "this" {
 # retrived this value will be used at k8s-worker-tf server
 # to join to Single node Kubernetes cluster
 
-data "external" "join_cmd" {
-  # count   = "${var.enabled == "true" ? 1 : 0}"
-  program = ["python", "${path.module}/../../conf/exdata.py"]
+# data "external" "join_cmd" {
+#   # count   = "${var.enabled == "true" ? 1 : 0}"
+#   program = ["python", "${path.module}/../../conf/exdata.py"]
 
-  query = {
-    host = "${scaleway_instance_server.this[0].public_ip}"
-  }
-  depends_on = ["scaleway_instance_server.this"]
-}
+#   query = {
+#     host = "${scaleway_instance_server.this[0].public_ip}"
+#   }
+#   depends_on = [scaleway_instance_server.this]
+# }
 
 

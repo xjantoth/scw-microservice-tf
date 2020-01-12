@@ -20,17 +20,17 @@ variable "sg_id" {
 }
 
 variable "worker_script_initial" {
-  type        = "string"
+  type        = string
   description = "Shell script to initiate Kubernetes worker"
 }
 
 variable "worker" {
-  type        = "string"
+  type        = string
   description = "Identifies Kubernetes role: master|worker"
 }
 
 variable "expected_join_cmd" {
-  type        = "string"
+  type        = string
   description = "Command executed at worker to join worker to Kubernetes master"
 }
 

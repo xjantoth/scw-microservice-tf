@@ -24,12 +24,12 @@ variable "sg_id" {
 }
 
 variable "master_script_initial" {
-  type        = "string"
+  type        = string
   description = "Shell script to initiate Kubernetes master"
 }
 
 variable "master" {
-  type        = "string"
+  type        = string
   description = "Identifies Kubernetes role: master"
 }
 

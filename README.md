@@ -44,6 +44,14 @@ conf/
 ## How to run terraform code with -var-file option
 
 ```bash
+
+ssh-keygen -f ~/.ssh/k8s-scw -C scw@k8s -t rsa -b 2048
+chmod 400 ~/.ssh/k8s-scw
+killall ssh-agent
+ssh-add  ~/.ssh/k8s-scw  #Lswc
+
+
+
 terraform fmt -recursive
 terraform validate
 terraform plan  -var-file=terraform.scw.tfvars 

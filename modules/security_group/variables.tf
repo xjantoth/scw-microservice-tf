@@ -1,15 +1,15 @@
 variable "sg_name" {
-  type        = "string"
+  type        = string
   description = "Security group name"
 }
 variable "allowed_tcp_ports" {
   description = "List of allowed TCP Firewall Ports - Kubernetes NodePorts"
-  type        = "list"
+  type        = list
 }
 
 variable "allowed_udp_ports" {
   description = "List of allowed UDP Firewall Ports - Kubernetes NodePorts"
-  type        = "list"
+  type        = list
 }
 
 

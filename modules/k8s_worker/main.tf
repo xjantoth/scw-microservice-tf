@@ -6,11 +6,11 @@ data "scaleway_image" "centos" {
 resource "scaleway_instance_ip" "this" {
   # Line below is commented because "scalweay_ip resource" will
   # be used as the input parameter for "scaleway_server resource"  
-  server_id = "${scaleway_instance_server.this[0].id}"
+  server_id = scaleway_instance_server.this[0].id
 }
 
 resource "scaleway_instance_server" "this" {
-  count = "${var.enabled == "true" ? 1 : 0}"
+  count = var.enabled == "true" ? 1 : 0
 
   name              = "k8s-${var.worker}-tf"
   image             = data.scaleway_image.centos.id

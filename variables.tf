@@ -9,7 +9,7 @@ variable "scw_token" {
 }
 
 variable "scw_access_key" {
-  type        = "string"
+  type        = string
   description = "Scaleway Region Access Key"
 }
 
@@ -50,42 +50,42 @@ variable "cloudinit_script_name" {
 }
 
 variable "master_script_initial" {
-  type        = "string"
+  type        = string
   description = "Shell script to initiate Kubernetes master"
 }
 
 variable "worker_script_initial" {
-  type        = "string"
+  type        = string
   description = "Shell script to initiate Kubernetes worker"
 }
 
 variable "worker" {
-  type        = "string"
+  type        = string
   description = "Identifies Kubernetes role: master|worker"
 }
 
 variable "master" {
-  type        = "string"
+  type        = string
   description = "Identifies Kubernetes role: master"
 }
 
 variable "master_enabled" {
-  type        = "string"
+  type        = string
   description = "Allows creation of Kubenetes Master"
 }
 
 variable "worker_enabled" {
-  type        = "string"
+  type        = string
   description = "Allows creation of Kubenetes Worker"
 }
 
 variable "allowed_tcp_ports" {
   description = "List of allowed TCP Firewall Ports - Kubernetes NodePorts"
-  type        = "list"
+  type        = list
 }
 
 variable "allowed_udp_ports" {
   description = "List of allowed UDP Firewall Ports - Kubernetes NodePorts"
-  type        = "list"
+  type        = list
 }
 
