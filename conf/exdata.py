@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# https://paulbrice.com/terraform/python/2017/12/18/external-provider-terraform.html
 
 """Script to test the external data provider in Terraform"""
 
@@ -47,10 +48,13 @@ def main():
     for line in lines:
         if line:
             jsondata = json.loads(line)
+
+            # jsondata = {"host": "1.2.3.4"}
     
     join_cmd = get_join_cmd(jsondata['host'])
     if join_cmd:
         jsondata['cmd'] = join_cmd
+    
     sys.stdout.write(json.dumps(jsondata))
 
 

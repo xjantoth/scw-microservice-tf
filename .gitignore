@@ -6,3 +6,4 @@
 *.tfvars
 *.log
 conf/__pycache__/
+**/*.png

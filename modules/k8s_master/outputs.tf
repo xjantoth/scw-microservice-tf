@@ -15,9 +15,9 @@ output "this_scaleway_server_public_ip" {
   description = "Kubernetes Master public ip"
 }
 
-# output "join_command" {
-#   value       = data.external.join_cmd.result.cmd
-#   description = "Join command to be executed at Worker server"
-# }
+output "join_command" {
+  value       = data.external.join_cmd.result.cmd
+  description = "Join command to be executed at Worker server"
+}
 
 

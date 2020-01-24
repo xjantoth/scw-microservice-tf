@@ -74,14 +74,16 @@ resource "scaleway_instance_server" "this" {
 # retrived this value will be used at k8s-worker-tf server
 # to join to Single node Kubernetes cluster
 
-# data "external" "join_cmd" {
-#   # count   = "${var.enabled == "true" ? 1 : 0}"
-#   program = ["python", "${path.module}/../../conf/exdata.py"]
+data "external" "join_cmd" {
+  # count   = "${var.enabled == "true" ? 1 : 0}"
+  program = ["python", "${path.module}/../../conf/exdata.py"]
 
-#   query = {
-#     host = "${scaleway_instance_server.this[0].public_ip}"
-#   }
-#   depends_on = [scaleway_instance_server.this]
-# }
+  query = {
+    host = "${scaleway_instance_server.this[0].public_ip}"
+  }
+  depends_on = [scaleway_instance_server.this]
+}
+
+
 
 

@@ -14,10 +14,10 @@ output "master_scaleway_server_public_ip" {
   description = "Kubernetes Master public ip"
 }
 
-# output "join_command" {
-#   value       = module.k8s_master.join_command
-#   description = "Join command (retrivet from Master) to be executed at Worker server"
-# }
+output "join_command" {
+  value       = module.k8s_master.join_command
+  description = "Join command (retrivet from Master) to be executed at Worker server"
+}
 
 
 # # Worker outputs
