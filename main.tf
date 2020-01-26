@@ -31,15 +31,15 @@ module "k8s_master" {
   master                   = var.master
 }
 
-# module "k8s_worker" {
-#   enabled                  = var.worker_enabled
-#   source                   = "./modules/k8s_worker"
-#   sg_id                    = module.security_group.this_security_group_id
-#   instance_type            = var.instance_type
-#   available_instance_types = var.available_instance_types
-#   operating_system         = var.operating_system
-#   worker_script_initial    = var.worker_script_initial
-#   worker                   = var.worker
-#   expected_join_cmd        = module.k8s_master.join_command
-# }
+module "k8s_worker" {
+  enabled                  = var.worker_enabled
+  source                   = "./modules/k8s_worker"
+  sg_id                    = module.security_group.this_security_group_id
+  instance_type            = var.instance_type
+  available_instance_types = var.available_instance_types
+  operating_system         = var.operating_system
+  worker_script_initial    = var.worker_script_initial
+  worker                   = var.worker
+  expected_join_cmd        = module.k8s_master.join_command
+}
 
