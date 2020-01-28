@@ -7,3 +7,4 @@
 *.log
 conf/__pycache__/
 **/*.png
+!papers/vault-example-in-k8s.png
