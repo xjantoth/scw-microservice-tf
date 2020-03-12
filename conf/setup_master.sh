@@ -16,6 +16,9 @@ echo -e "File ${COMMON} present!"
 source ${COMMON}
 #yum update -y
 
+# Disable welcome
+disable_welome
+
 # Disable Selinux
 disable_selinux
 
@@ -66,10 +69,12 @@ sed -i.bak '/^\s*kind:\s*DaemonSet/,/^\s*template/s/^\(\s*spec:\s*\)/\1 \n      
 kubectl create -f weave_custom.yaml
 
 # Install helm binary
-install_helm
+# install_helm
+
+install_helm3
 
 # Setting up helm-tiller communication
-secure_helm_tiller
+# secure_helm_tiller
 
 # Execute show-join-to-k8s-command.sh script to retrive join to k8s command
 # kubeadm token create --print-join-command

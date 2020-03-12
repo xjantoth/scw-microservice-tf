@@ -37,6 +37,10 @@ function allow_fw_port () {
   firewall-cmd --permanent --add-port=${port}/${protocol}
 }
 
+function disable_welome () {
+  touch /root/.hushlogin
+}
+
 function setup_bridge {
 cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -64,6 +68,16 @@ function install_helm {
   chmod 700 get_helm.sh
   ./get_helm.sh
 }
+
+function install_helm3 () {
+  mkdir /tmp/helm3_unpacked
+  curl --output /tmp/helm3.tgz -L https://get.helm.sh/helm-v3.1.1-linux-amd64.tar.gz
+  tar -xvf /tmp/helm3.tgz  -C /tmp/helm3_unpacked
+  cp /tmp/helm3_unpacked/linux-amd64/helm /usr/bin/helm3
+  chmod +x /usr/bin/helm3
+  helm3
+}
+
 
 function generate_certs {
   CERTS_DIR="/opt/certs"

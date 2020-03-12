@@ -15,6 +15,9 @@ source ${COMMON}
 
 #yum update -y
 
+# Disable welcome
+disable_welome
+
 # Disable Selinux
 disable_selinux
 

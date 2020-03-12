@@ -78,3 +78,17 @@ curl -k -H 'X-Vault-Token: s.V2Jy6CKLTIiott6MuajC6WhG' http://vault:8200/v1/appl
 ```
 
 ![Screenshot](papers/vault-example-in-k8s.png)
+
+
+
+
+```
+git clone https://github.com/xjantoth/scw-microservice-tf
+
+main.tf
+variables.tf
+outputs.tf
+terraform.scw.tfvars (optional - personal preference)
+modules/
+conf/
+```

@@ -14,6 +14,3 @@ worker_enabled        = "true"
 master_enabled        = "true"
 allowed_tcp_ports     = ["30111", "30222", "30333", "30444", "22", "6443", "10250", "10251", "10252", "6783", "6784", "2379", "2380"]
 allowed_udp_ports     = ["6783"]
-
-
-

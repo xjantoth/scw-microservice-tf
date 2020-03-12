@@ -48,6 +48,7 @@ conf/
 ssh-keygen -f ~/.ssh/k8s-scw -C scw@k8s -t rsa -b 2048
 chmod 400 ~/.ssh/k8s-scw
 killall ssh-agent
+echo "" > ~/.ssh/known_hosts
 ssh-add  ~/.ssh/k8s-scw  #Lswc
 
 
