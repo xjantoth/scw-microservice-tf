@@ -28,7 +28,7 @@ swapp_off
 # Setup firewall rules to allow: Master/Worker communication within cluster
 setup_pkg firewalld 
 
-for couple in 6443:tcp 2379-2380:tcp 10250:tcp 10251:tcp 10252:tcp 6783:tcp 6783:udp 6784:udp; do
+for couple in 6443:tcp 2379-2380:tcp 10250:tcp 10251:tcp 10252:tcp 6783:tcp 6783:udp 6784:udp 30444:tcp 30333:tcp 30222:tcp; do
   PORT=$(echo ${couple} | awk -F":" '{print $1}')
   PROTOCOL=$(echo ${couple} | awk -F":" '{print $2}')
   allow_fw_port ${PORT} ${PROTOCOL}
